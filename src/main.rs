@@ -14,16 +14,27 @@ fn main() -> Result<()> {
     // Notebooks Directory
     create_dir(&format!("{}/notebooks/", project_name));
 
+    // Scripts Directory
+    create_dir(&format!("{}/scripts/", project_name));
+
+    // src Directory
+    create_dir(&format!("{}/src/", project_name));
+
+    // Images Directory
+    create_dir(&format!("{}/images/", project_name));
+
     // Root Files
     create_file(
         &format!("{}/README.md", project_name),
         &format!("# {}", project_name),
     )?;
 
-    // Scripts Directory
-    // Images Directory
-    // Models Directory
-    // ...
+    create_file(&format!("{}/.gitignore", project_name), ".env")?;
+
+    create_file(
+        &format!("{}/requirements.txt", project_name),
+        "Requirements",
+    )?;
 
     Ok(())
 }
