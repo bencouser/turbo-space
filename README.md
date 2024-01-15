@@ -20,5 +20,10 @@ Files to be generated:
 - notebooks/
 - src/
 
+Other Things to look into:
+- creating new env conda env with a set of default dependancies
+- prepopulate notebook files with basic packages
+
+
 
 This will change as I develop and remember more things that I need.
