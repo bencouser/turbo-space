@@ -53,7 +53,7 @@ fn main() -> Result<()> {
         "Requirements",
     )?;
 
-    create_conda_environment(&env_name, template_path)?;
+    create_conda_environment(&project_name, &env_name, template_path)?;
 
     Ok(())
 }
@@ -72,28 +72,31 @@ fn create_file(path: &str, contents: &str) -> Result<()> {
     Ok(())
 }
 
-fn create_conda_environment(env_name: &str, template_path: &str) -> io::Result<()> {
+fn create_conda_environment(
+    project_name: &str,
+    env_name: &str,
+    template_path: &str,
+) -> io::Result<()> {
     println!("Creating conda environment...");
 
     // Read template file
-    println!("temp");
     let template = fs::read_to_string(template_path)?;
 
-    println!("config");
+    // print the env name
+    println!("env_name: {}", env_name);
+
     // Replace placeholder with env name
     let config = template.replace("PLACEHOLDER", env_name);
 
     // Write to a new file
-    println!("create file");
-    create_file(&format!("{}.yml", env_name), &config)?;
+    create_file(&format!("{}/{}.yml", project_name, env_name), &config)?;
 
     // Create Environment
-    println!("create env");
     let output = Command::new("conda")
         .arg("env")
         .arg("create")
         .arg("-f")
-        .arg("environment.yml")
+        .arg(&format!("{}/{}.yml", project_name, env_name))
         .output()?;
 
     if output.status.success() {
