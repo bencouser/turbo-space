@@ -22,6 +22,7 @@ Files to be generated:
 
 Other Things to look into (in order of me caring)
 - make input value for the name of the project []
+- break main file into other files []
 - prepopulate notebook files with basic packages []
 - creating new env conda env with a set of default dependancies []
 
