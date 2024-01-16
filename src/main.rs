@@ -1,10 +1,18 @@
+use std::env;
 use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::Result;
 
 fn main() -> Result<()> {
-    let project_name = "project_name";
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() < 2 {
+        println!("Please provide a project name!");
+        return Ok(());
+    }
+
+    let project_name = &args[1];
 
     // Data Directory
     create_dir(&format!("{}/data/", project_name));
@@ -35,6 +43,9 @@ fn main() -> Result<()> {
         &format!("{}/README.md", project_name),
         &format!("# {}", project_name),
     )?;
+
+    // make .env file
+    create_file(&format!("{}/.env", project_name), "")?;
 
     create_file(&format!("{}/.gitignore", project_name), ".env")?;
 
