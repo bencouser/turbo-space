@@ -9,20 +9,21 @@ The script will take in a name for the project and generate the
 file structure with the name of the project as the root folder.
 
 Files to be generated:
-- README.md
-- .gitignore (.env inside)
-- .env
-- requirements.txt
-- data/
-- data/raw/
-- data/processed/
-- models/
-- notebooks/
-- src/
+- README.md [x]
+- .gitignore (.env inside) [x]
+- .env [x]
+- requirements.txt [x]
+- data/ [x]
+- data/raw/ [x]
+- data/processed/ [x]
+- models/ [x]
+- notebooks/ [x]
+- src/ [x]
 
-Other Things to look into:
-- creating new env conda env with a set of default dependancies
-- prepopulate notebook files with basic packages
+Other Things to look into (in order of me caring)
+- make input value for the name of the project []
+- prepopulate notebook files with basic packages []
+- creating new env conda env with a set of default dependancies []
 
 
 

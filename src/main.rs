@@ -13,9 +13,16 @@ fn main() -> Result<()> {
 
     // Notebooks Directory
     create_dir(&format!("{}/notebooks/", project_name));
+    // create_file(
+    //     &format!("{}/notebooks/data_visualisation.ipynb", project_name),
+    //     "Notebooks",
+    // )?;
 
     // Scripts Directory
     create_dir(&format!("{}/scripts/", project_name));
+
+    // Models Directory
+    create_dir(&format!("{}/models/", project_name));
 
     // src Directory
     create_dir(&format!("{}/src/", project_name));
