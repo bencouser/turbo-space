@@ -1,8 +1,7 @@
 use std::env;
 use std::fs;
 use std::fs::File;
-use std::io::Result;
-use std::io::{self, Write};
+use std::io::{self, Read, Result, Write};
 use std::process::Command;
 
 fn main() -> Result<()> {
@@ -43,10 +42,15 @@ fn main() -> Result<()> {
         &format!("# {}", project_name),
     )?;
 
-    // make .env file
     create_file(&format!("{}/.env", project_name), "")?;
 
     create_file(&format!("{}/.gitignore", project_name), ".env")?;
+
+    let mut file = File::open(template_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+
+    create_file(&format!("{}/environment.yml", project_name), &contents)?;
 
     create_file(
         &format!("{}/requirements.txt", project_name),
