@@ -13,8 +13,11 @@ fn main() -> Result<()> {
     }
 
     let project_name = &args[1];
-    let env_name = format!("{}_env", project_name);
-    let template_path = "./environment.yml";
+
+    // Create env file eventually
+    //
+    // let env_name = format!("{}_env", project_name);
+    // let template_path = "./environment.yml";
 
     // Data Directory
     create_dir(&format!("{}/data/", project_name));
@@ -46,18 +49,19 @@ fn main() -> Result<()> {
 
     create_file(&format!("{}/.gitignore", project_name), ".env")?;
 
-    let mut file = File::open(template_path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-
-    create_file(&format!("{}/environment.yml", project_name), &contents)?;
-
     create_file(
         &format!("{}/requirements.txt", project_name),
         "Requirements",
     )?;
 
-    create_conda_environment(&project_name, &env_name, template_path)?;
+    // Create conda environment
+    //
+    // let mut file = File::open(template_path)?;
+    // let mut contents = String::new();
+    // file.read_to_string(&mut contents)?;
+
+    // create_file(&format!("{}/environment.yml", project_name), &contents)?;
+    // create_conda_environment(&project_name, &env_name, template_path)?;
 
     Ok(())
 }
@@ -76,6 +80,9 @@ fn create_file(path: &str, contents: &str) -> Result<()> {
     Ok(())
 }
 
+// Note: the problem is stemming from when trying to read
+// the environment.yml file. It is not there to read its contents
+// when using it as an input parameter.
 fn create_conda_environment(
     project_name: &str,
     env_name: &str,
@@ -99,8 +106,8 @@ fn create_conda_environment(
     let output = Command::new("conda")
         .arg("env")
         .arg("create")
-        .arg("-f")
-        .arg(&format!("{}/{}.yml", project_name, env_name))
+        // .arg("-f")
+        .arg(&format!("--file=./{}/{}.yml", project_name, env_name))
         .output()?;
 
     if output.status.success() {
