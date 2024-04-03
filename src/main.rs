@@ -53,6 +53,7 @@ fn main() -> Result<()> {
         "Requirements",
     )?;
 
+    // Create Conda Environment
     create_conda_env(&env_name);
 
     Ok(())
@@ -78,15 +79,41 @@ fn create_conda_env(env_name: &str) {
             "create",
             "--name",
             env_name,
-            "python=3.8",
+            "python=3.10",
             "numpy",
             "pandas",
+            "tensorflow",
+            "grpcio >=1.37.0,<2.0",
+            "h5py >=3.6.0,<3.7",
             "-y",
         ])
         .output();
 
     match conda_create {
-        Ok(output) => println!("Conda env created: {:?}", output),
+        Ok(..) => {
+            println!("Conda env created with: Python 3.10");
+            // Install other packages
+            let pip_install = Command::new("conda")
+                .args(&[
+                    "run",
+                    "-n",
+                    env_name,
+                    "--no-capture-output",
+                    "pip",
+                    "install",
+                    "tensorflow-macos",
+                    "tensorflow-metal",
+                ])
+                .output();
+
+            match pip_install {
+                Ok(..) => println!("Installed tensorflow-macos and tensorflow-metal"),
+                Err(e) => println!(
+                    "Error installing tensorflow-macos and tensorflow-metal: {:?}",
+                    e
+                ),
+            }
+        }
         Err(e) => println!("Error creating Conda environment: {:?}", e),
     }
 }
