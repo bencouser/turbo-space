@@ -1,7 +1,7 @@
 use std::env;
 use std::fs;
 use std::fs::File;
-use std::io::{self, Read, Result, Write};
+use std::io::{Result, Write};
 use std::process::Command;
 
 fn main() -> Result<()> {
@@ -15,9 +15,8 @@ fn main() -> Result<()> {
     let project_name = &args[1];
 
     // Create env file eventually
-    //
-    // let env_name = format!("{}_env", project_name);
-    // let template_path = "./environment.yml";
+
+    let env_name = format!("{}-env", project_name);
 
     // Data Directory
     create_dir(&format!("{}/data/", project_name));
@@ -54,14 +53,7 @@ fn main() -> Result<()> {
         "Requirements",
     )?;
 
-    // Create conda environment
-    //
-    // let mut file = File::open(template_path)?;
-    // let mut contents = String::new();
-    // file.read_to_string(&mut contents)?;
-
-    // create_file(&format!("{}/environment.yml", project_name), &contents)?;
-    // create_conda_environment(&project_name, &env_name, template_path)?;
+    create_conda_env(&env_name);
 
     Ok(())
 }
@@ -80,41 +72,21 @@ fn create_file(path: &str, contents: &str) -> Result<()> {
     Ok(())
 }
 
-// Note: the problem is stemming from when trying to read
-// the environment.yml file. It is not there to read its contents
-// when using it as an input parameter.
-fn create_conda_environment(
-    project_name: &str,
-    env_name: &str,
-    template_path: &str,
-) -> io::Result<()> {
-    println!("Creating conda environment...");
+fn create_conda_env(env_name: &str) {
+    let conda_create = Command::new("conda")
+        .args(&[
+            "create",
+            "--name",
+            env_name,
+            "python=3.8",
+            "numpy",
+            "pandas",
+            "-y",
+        ])
+        .output();
 
-    // Read template file
-    let template = fs::read_to_string(template_path)?;
-
-    // print the env name
-    println!("env_name: {}", env_name);
-
-    // Replace placeholder with env name
-    let config = template.replace("PLACEHOLDER", env_name);
-
-    // Write to a new file
-    create_file(&format!("{}/{}.yml", project_name, env_name), &config)?;
-
-    // Create Environment
-    let output = Command::new("conda")
-        .arg("env")
-        .arg("create")
-        // .arg("-f")
-        .arg(&format!("--file=./{}/{}.yml", project_name, env_name))
-        .output()?;
-
-    if output.status.success() {
-        println!("Created conda environment!");
-    } else {
-        println!("Error creating conda environment");
+    match conda_create {
+        Ok(output) => println!("Conda env created: {:?}", output),
+        Err(e) => println!("Error creating Conda environment: {:?}", e),
     }
-
-    Ok(())
 }
